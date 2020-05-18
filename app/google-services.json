@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "763148903376",
+    "firebase_url": "https://bgapp-5c7b3.firebaseio.com",
+    "project_id": "bgapp-5c7b3",
+    "storage_bucket": "bgapp-5c7b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763148903376:android:d104f8cc4fbf67f4abcfd5",
+        "android_client_info": {
+          "package_name": "com.example.bgapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763148903376-361uvlfeafnij69ii3lo5e3ad47k7f0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJiIttRG4Aej7T_dtm9_DBtg_1gcT0f5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763148903376-361uvlfeafnij69ii3lo5e3ad47k7f0p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
