@@ -50,9 +50,37 @@
                 android:id="@+id/user_status"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="user name"
+                android:text="status"
                 android:textAlignment="textStart"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/request_accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Accept"
+                    android:textSize="16sp"
+                    android:textAllCaps="false"
+                    android:visibility="invisible"
+                    android:background="@android:color/holo_green_light"/>
+
+                <Button
+                    android:id="@+id/request_reject_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:text="Refuse"
+                    android:layout_marginStart="15dp"
+                    android:textSize="16sp"
+                    android:textAllCaps="false"
+                    android:visibility="invisible"
+                    android:background="@android:color/holo_red_light"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
