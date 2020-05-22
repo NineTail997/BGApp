@@ -108,6 +108,75 @@ public class RequestFragment extends Fragment {
                                                         .placeholder(R.drawable.default_image)
                                                         .into(holder.userImage);
 
+                                                holder.acceptButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        contactsRef.child(currentUserID).child(listUserID)
+                                                                .child("Contacts").setValue("Saved")
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            contactsRef.child(listUserID).child(currentUserID)
+                                                                                    .child("Contacts").setValue("Saved")
+                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                requestsRef.child(currentUserID).child(listUserID)
+                                                                                                        .removeValue()
+                                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                            @Override
+                                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                if (task.isSuccessful()) {
+                                                                                                                    requestsRef.child(listUserID).child(currentUserID)
+                                                                                                                            .removeValue()
+                                                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                                                @Override
+                                                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                                    if (task.isSuccessful()) {
+                                                                                                                                        Toast.makeText(getContext(), "Added new friend", Toast.LENGTH_SHORT).show();
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                            });
+                                                                                                                }
+                                                                                                            }
+                                                                                                        });
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                    }
+                                                });
+
+                                                holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        requestsRef.child(currentUserID).child(listUserID)
+                                                                .removeValue()
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            requestsRef.child(listUserID).child(currentUserID)
+                                                                                    .removeValue()
+                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(getContext(), "Friend request rejected", Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+
                                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
@@ -193,6 +262,95 @@ public class RequestFragment extends Fragment {
 
                                             }
                                         });
+                                    } else if (type.equals("sent")) {
+                                        holder.itemView.findViewById(R.id.request_accept_button).setVisibility(View.GONE);
+                                        holder.rejectButton.setText("Cancel friend request");
+
+
+                                        usersRef.child(listUserID).addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                final String profileImage = dataSnapshot.child("image").getValue().toString();
+                                                final String profileName = dataSnapshot.child("name").getValue().toString();
+                                                final String profileStatus = dataSnapshot.child("status").getValue().toString();
+
+                                                holder.userName.setText(profileName);
+                                                holder.userStatus.setText("You have sent a friend request to " + profileName);
+                                                Glide.with(RequestFragment.this)
+                                                        .load(profileImage)
+                                                        .placeholder(R.drawable.default_image)
+                                                        .into(holder.userImage);
+
+                                                holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        requestsRef.child(currentUserID).child(listUserID)
+                                                                .removeValue()
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                        if (task.isSuccessful()) {
+                                                                            requestsRef.child(listUserID).child(currentUserID)
+                                                                                    .removeValue()
+                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                                            if (task.isSuccessful()) {
+                                                                                                Toast.makeText(getContext(), "Friend request rejected", Toast.LENGTH_SHORT).show();
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+
+                                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        CharSequence options[] = new CharSequence[] {
+                                                                "Cancel friend request"
+                                                        };
+                                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                        builder.setTitle("Your friend request to " + profileName);
+
+                                                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                if (which == 0) {
+                                                                    requestsRef.child(currentUserID).child(listUserID)
+                                                                            .removeValue()
+                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                @Override
+                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                    if (task.isSuccessful()) {
+                                                                                        requestsRef.child(listUserID).child(currentUserID)
+                                                                                                .removeValue()
+                                                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                    @Override
+                                                                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                                                                        if (task.isSuccessful()) {
+                                                                                                            Toast.makeText(getContext(), "You have cancelled friend request", Toast.LENGTH_SHORT).show();
+                                                                                                        }
+                                                                                                    }
+                                                                                                });
+                                                                                    }
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        });
+                                                        builder.show();
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -230,21 +388,6 @@ public class RequestFragment extends Fragment {
             userImage = itemView.findViewById(R.id.users_profile_image);
             acceptButton = itemView.findViewById(R.id.request_accept_button);
             rejectButton = itemView.findViewById(R.id.request_reject_button);
-
-            acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-            rejectButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-
         }
     }
 }

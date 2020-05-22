@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/DarkGreen" />
 
     <TextView
         android:id="@+id/textView"
@@ -49,7 +49,14 @@
         android:id="@+id/editTextDisplayName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:hint="Enter Display Name" />
+
+    <EditText
+        android:id="@+id/editTextStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Add  your status" />
 
     <Button
         android:id="@+id/buttonSave"
@@ -72,7 +79,7 @@
         android:background="@drawable/rounded_button_solid"
         android:paddingLeft="55dp"
         android:paddingRight="55dp"
-        android:text="Move"
+        android:text="Move to app"
         android:textAllCaps="false" />
 
 

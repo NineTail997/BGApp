@@ -58,7 +58,7 @@
         android:textStyle="bold"
         android:text="Send Message"
         android:textAllCaps="false"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/LimeGreen" />
 
     <Button
         android:id="@+id/declineRequest"
@@ -75,7 +75,7 @@
         android:text="Cancel chat request"
         android:visibility="invisible"
         android:textAllCaps="false"
-        android:textColor="@color/colorAccent" />
+        android:textColor="@color/LimeGreen" />
 
 
 

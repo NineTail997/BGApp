@@ -27,8 +27,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,7 +44,7 @@ public class StartActivity extends AppCompatActivity {
     private static final int CHOOSE_IMAGE = 150;
 
     private ImageView imageView;
-    private EditText editText;
+    private EditText editText, editStatus;
     private TextView textView;
 
     private Uri uriProfileImage;
@@ -62,12 +65,14 @@ public class StartActivity extends AppCompatActivity {
         currentUserID = mAuth.getCurrentUser().getUid();
         user = mAuth.getCurrentUser();
         mRef = FirebaseDatabase.getInstance().getReference();
+        profileImageUrl = user.getPhotoUrl().toString();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         textView = (TextView) findViewById(R.id.textView);
         editText = (EditText) findViewById(R.id.editTextDisplayName);
+        editStatus = (EditText) findViewById(R.id.editTextStatus);
         imageView = (ImageView) findViewById(R.id.imageView);
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
@@ -90,14 +95,18 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.buttonMove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveToMain();
+                if (mRef.child("Users").child(currentUserID).child("image").equals(currentUserID)) {
+                    Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
+                } else moveToMain();
             }
         });
     }
 
     private void moveToMain() {
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         finish();
-        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override
@@ -105,27 +114,45 @@ public class StartActivity extends AppCompatActivity {
         super.onStart();
 
         if (mAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(this, SignInActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
-            startActivity(new Intent(this, SignInActivity.class));
         }
     }
 
     private void loadUserInformation() {
         if (user != null) {
-            if (user.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(user.getPhotoUrl().toString())
-                        .into(imageView);
-            }
-
-            if (user.getDisplayName() != null) {
-                textView.setText("\nWelcome " + user.getDisplayName());
-                //editText.setText(user.getDisplayName());
-                editText.setVisibility(View.INVISIBLE);
+            editText.setVisibility(View.VISIBLE);
+            if (mRef.child("Users").child(currentUserID).equals(currentUserID)) {
+                textView.setText("Tap on camera to choose profile picture");
 
             } else {
-                textView.setText("Tap on camera to choose profile picture");
-                editText.setVisibility(View.VISIBLE);
+                mRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name") && (dataSnapshot.hasChild("image"))))
+                        {
+                            String retrieveUserName = dataSnapshot.child("name").getValue().toString();
+                            String retrievesStatus = dataSnapshot.child("status").getValue().toString();
+                            String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
+
+                            textView.setText("\nWelcome " + retrieveUserName);
+                            editText.setVisibility(View.GONE);
+                            editText.setText(retrieveUserName);
+                            editStatus.setText(retrievesStatus);
+                            Glide.with(StartActivity.this)
+                                    .load(retrieveProfileImage)
+                                    .into(imageView);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         }
     }
@@ -133,6 +160,7 @@ public class StartActivity extends AppCompatActivity {
     private void saveUserInformation() {
 
         String displayName = editText.getText().toString();
+        String displayStatus = editStatus.getText().toString();
 
         if (displayName.isEmpty()) {
             editText.setError("Name required");
@@ -153,12 +181,12 @@ public class StartActivity extends AppCompatActivity {
                     .setPhotoUri(Uri.parse(profileImageUrl))
                     .build();
 
-            HashMap<String, String> profileMap = new HashMap<>();
+            HashMap<String, Object> profileMap = new HashMap<>();
                 profileMap.put("uid", currentUserID);
                 profileMap.put("name", displayName);
-                profileMap.put("status", "");
+                profileMap.put("status", displayStatus);
                 profileMap.put("image", profileImageUrl);
-            mRef.child("Users").child(currentUserID).setValue(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mRef.child("Users").child(currentUserID).updateChildren(profileMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {

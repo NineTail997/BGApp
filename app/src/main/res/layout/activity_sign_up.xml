@@ -11,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:background="@color/DarkGreen" />
 
 
     <RelativeLayout
@@ -20,8 +20,8 @@
         android:layout_weight="1">
 
         <ImageView
-            android:layout_width="85dp"
-            android:layout_height="100dp"
+            android:layout_width="280dp"
+            android:layout_height="70dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@drawable/app_logo" />
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/colorPrimary">
+        android:background="@color/DarkGreen">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:hint="email"
                 android:inputType="textEmailAddress"
                 android:paddingBottom="15dp"
-                android:textColorHint="@color/colorAccent" />
+                android:textColorHint="@color/LimeGreen" />
 
             <EditText
                 android:id="@+id/editTextPassword"
@@ -61,7 +61,7 @@
                 android:hint="password"
                 android:inputType="textPassword"
                 android:paddingBottom="15dp"
-                android:textColorHint="@color/colorAccent" />
+                android:textColorHint="@color/LimeGreen" />
 
             <Button
                 android:id="@+id/buttonSignUp"
@@ -72,7 +72,7 @@
                 android:background="@drawable/rounded_button_transparent"
                 android:text="Sign Up"
                 android:textAllCaps="false"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/LimeGreen" />
 
             <TextView
                 android:id="@+id/textViewLogin"
@@ -82,7 +82,7 @@
                 android:text="Already have an account? Login"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/LimeGreen" />
 
 
         </LinearLayout>

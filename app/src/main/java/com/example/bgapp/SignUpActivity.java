@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -23,7 +26,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     EditText editTextEmail, editTextPassword;
 
     private FirebaseAuth mAuth;
-    //private DatabaseReference mRef;
+    private DatabaseReference mRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
 
         mAuth = FirebaseAuth.getInstance();
-        //mRef = FirebaseDatabase.getInstance().getReference();
+        mRef = FirebaseDatabase.getInstance().getReference();
 
         findViewById(R.id.buttonSignUp).setOnClickListener(this);
         findViewById(R.id.textViewLogin).setOnClickListener(this);
@@ -76,9 +79,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<AuthResult> task) {
                 progressBar.setVisibility(View.GONE);
                 if (task.isSuccessful()) {
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
                     Toast.makeText(getApplicationContext(), "User Successfully Registered", Toast.LENGTH_SHORT).show();
-                    //String currentUserId = mAuth.getCurrentUser().getUid();
-                    //mRef.child("Users").child(currentUserId).setValue("");
+                    String currentUserId = mAuth.getCurrentUser().getUid();
+                    mRef.child("Users").child(currentUserId).setValue("");
+                    mRef.child("Users").child(currentUserId).child("device_token").setValue(deviceToken);
+
                     finish();
                     Intent intent = new Intent(SignUpActivity.this, StartActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

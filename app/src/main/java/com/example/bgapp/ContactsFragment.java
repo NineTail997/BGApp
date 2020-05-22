@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -73,7 +74,19 @@ public class ContactsFragment extends Fragment {
                 usersRef.child(usersID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChild("image")) {
+                        if (dataSnapshot.exists()) {
+                            if(dataSnapshot.child("user_state").hasChild("state")) {
+                                String state = dataSnapshot.child("user_state").child("state").getValue().toString();
+
+                                if(state.equals("online")) {
+                                    holder.onlineIcon.setVisibility(View.VISIBLE);
+                                } else if(state.equals("offline")) {
+                                    holder.onlineIcon.setVisibility(View.INVISIBLE);
+                                }
+                            } else {
+                                holder.onlineIcon.setVisibility(View.INVISIBLE);
+                            }
+
                             String profileImage = dataSnapshot.child("image").getValue().toString();
                             String profileName = dataSnapshot.child("name").getValue().toString();
                             String profileStatus = dataSnapshot.child("status").getValue().toString();
@@ -111,6 +124,7 @@ public class ContactsFragment extends Fragment {
 
         TextView userName, userStatus;
         CircleImageView userImage;
+        ImageView onlineIcon;
 
         public contactsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,7 +132,7 @@ public class ContactsFragment extends Fragment {
             userName = itemView.findViewById(R.id.user_profile_name);
             userStatus = itemView.findViewById(R.id.user_status);
             userImage = itemView.findViewById(R.id.users_profile_image);
-
+            onlineIcon = itemView.findViewById(R.id.online_status);
         }
     }
 }

@@ -28,6 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar toolbar;
@@ -35,9 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout tabLayout;
     private TabAdapter tabAdapter;
 
-    private FirebaseUser currentUser;
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
+
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         mRef = FirebaseDatabase.getInstance().getReference();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -65,9 +69,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         verifyUserInformation();
 
-        if (mAuth.getCurrentUser() == null) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
             finish();
             startActivity(new Intent(this, SignInActivity.class));
+        } else {
+            updateUserStatus("online");
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            updateUserStatus("offline");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            updateUserStatus("offline");
         }
     }
 
@@ -98,9 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.editUser:
                 Intent editIntent = new Intent(MainActivity.this, StartActivity.class);
-                editIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(editIntent);
-                finish();
                 break;
 
             case R.id.createNewEvent:
@@ -113,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.menuLogout:
+                updateUserStatus("offline");
                 FirebaseAuth.getInstance().signOut();
                 Intent logoutIntent = new Intent(MainActivity.this, SignInActivity.class);
                 logoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -186,5 +215,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
+
+    private void updateUserStatus(String state) {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd MMM yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+        mRef.child("Users").child(currentUserID).child("user_state")
+                .updateChildren(onlineStateMap);
+
     }
 }
