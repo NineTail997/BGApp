@@ -85,20 +85,11 @@ public class ChatsFragment extends Fragment {
                                     final String profileName = dataSnapshot.child("name").getValue().toString();
                                     final String profileStatus = dataSnapshot.child("status").getValue().toString();
 
-                                    if(dataSnapshot.child("user_state").hasChild("state")) {
-                                        String state = dataSnapshot.child("user_state").child("state").getValue().toString();
+                                    if((dataSnapshot.hasChild("user_state"))) {
                                         String date = dataSnapshot.child("user_state").child("date").getValue().toString();
                                         String time = dataSnapshot.child("user_state").child("time").getValue().toString();
-
-                                        if(state.equals("online")) {
-                                            holder.userStatus.setText("online");
-                                        } else if(state.equals("offline")) {
-                                            holder.userStatus.setText("Last seen: " + date + " " + time);
-
-                                        }
-                                    } else {
-                                        holder.userStatus.setText("offline");
-                                    }
+                                        holder.userStatus.setText("Last seen:\n" + date + " " + time);
+                                    } else holder.userStatus.setText("Offline");
 
                                     holder.userName.setText(profileName);
                                     Glide.with(ChatsFragment.this)

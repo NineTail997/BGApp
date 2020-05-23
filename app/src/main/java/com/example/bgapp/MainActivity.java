@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
+    private FirebaseUser currentUser;
 
     private String currentUserID;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
+        currentUser = mAuth.getCurrentUser();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,37 +71,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         verifyUserInformation();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
         if (currentUser == null) {
-            finish();
             startActivity(new Intent(this, SignInActivity.class));
-        } else {
-            updateUserStatus("online");
-        }
+            finish();
+        } //else updateUserStatus("online");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser != null) {
-            updateUserStatus("offline");
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser != null) {
-            updateUserStatus("offline");
-        }
-    }
 
     @Override
     public void onClick(View view) {
@@ -136,12 +113,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.findFriends:
-                finish();
                 startActivity(new Intent(this, FindFriendsActivity.class));
+                finish();
                 break;
 
             case R.id.menuLogout:
-                updateUserStatus("offline");
                 FirebaseAuth.getInstance().signOut();
                 Intent logoutIntent = new Intent(MainActivity.this, SignInActivity.class);
                 logoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -236,6 +212,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mRef.child("Users").child(currentUserID).child("user_state")
                 .updateChildren(onlineStateMap);
-
     }
 }

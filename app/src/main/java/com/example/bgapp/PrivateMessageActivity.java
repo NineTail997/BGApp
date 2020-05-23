@@ -32,7 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PrivateMessageActivity extends AppCompatActivity {
     private  String messageReceiverID, messageReceiverName, messageReceiverImage, currentUserID;
+    private String saveCurrentTime, saveCurrentDate;
 
     private TextView userName, userLastSeen;
     private CircleImageView userImage;
@@ -84,6 +87,8 @@ public class PrivateMessageActivity extends AppCompatActivity {
                 sendMessage();
             }
         });
+
+        displayLastSeen();
     }
 
     @Override
@@ -141,8 +146,12 @@ public class PrivateMessageActivity extends AppCompatActivity {
 
             Map messageTextBody = new HashMap();
             messageTextBody.put("message", messageText);
+            messageTextBody.put("messageID", messagePushID);
             messageTextBody.put("type", "text");
             messageTextBody.put("from", currentUserID);
+            messageTextBody.put("to", messageReceiverID);
+            messageTextBody.put("time", saveCurrentTime);
+            messageTextBody.put("date", saveCurrentDate);
 
             Map messageBodyDetails = new HashMap();
             messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
@@ -187,10 +196,17 @@ public class PrivateMessageActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd MMM yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
     private void displayLastSeen() {
-        mRef.child("Users").child(currentUserID)
+        mRef.child("Users").child(messageReceiverID)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -199,12 +215,7 @@ public class PrivateMessageActivity extends AppCompatActivity {
                             String date = dataSnapshot.child("user_state").child("date").getValue().toString();
                             String time = dataSnapshot.child("user_state").child("time").getValue().toString();
 
-                            if(state.equals("online")) {
-                                userLastSeen.setText("online");
-                            } else if(state.equals("online")) {
-                                userLastSeen.setText("Last seen: " + date + " " + time);
-
-                            }
+                            userLastSeen.setText("Last seen: " + date + " " + time);
                         } else {
                             userLastSeen.setText("offline");
                         }
