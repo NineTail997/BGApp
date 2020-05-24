@@ -54,6 +54,7 @@ public class StartActivity extends AppCompatActivity {
 
     private String profileImageUrl;
     private String currentUserID;
+    private String currentUserName;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
@@ -66,8 +67,9 @@ public class StartActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         user = mAuth.getCurrentUser();
+        currentUserName = user.getDisplayName();
+
         mRef = FirebaseDatabase.getInstance().getReference();
-        profileImageUrl = user.getPhotoUrl().toString();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,7 +102,6 @@ public class StartActivity extends AppCompatActivity {
                 if (mRef.child("Users").child(currentUserID).child("image").equals(currentUserID)) {
                     Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateUserStatus("online");
                     moveToMain();
                 }
             }
@@ -108,15 +109,17 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void moveToMain() {
+        finish();
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        updateUserStatus("online");
 
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(this, SignInActivity.class);
@@ -128,11 +131,11 @@ public class StartActivity extends AppCompatActivity {
 
     private void loadUserInformation() {
         if (user != null) {
-            editText.setVisibility(View.VISIBLE);
+            if (currentUserName == null) editText.setVisibility(View.VISIBLE);
             if (mRef.child("Users").child(currentUserID).equals(currentUserID)) {
                 textView.setText("Tap on camera to choose profile picture");
-
             } else {
+                progressBar.setVisibility(View.VISIBLE);
                 mRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -146,18 +149,20 @@ public class StartActivity extends AppCompatActivity {
                             editText.setVisibility(View.GONE);
                             editText.setText(retrieveUserName);
                             editStatus.setText(retrievesStatus);
-                            Glide.with(StartActivity.this)
-                                    .load(retrieveProfileImage)
-                                    .into(imageView);
+                            if (retrieveProfileImage != null) {
+                                Glide.with(getApplicationContext())
+                                        .load(retrieveProfileImage)
+                                        .placeholder(R.drawable.default_image)
+                                        .into(imageView);
+                            }
                         }
-
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
+                progressBar.setVisibility(View.GONE);
             }
         }
     }
@@ -166,6 +171,7 @@ public class StartActivity extends AppCompatActivity {
 
         String displayName = editText.getText().toString();
         String displayStatus = editStatus.getText().toString();
+        profileImageUrl = user.getPhotoUrl().toString();
 
         if (displayName.isEmpty()) {
             editText.setError("Name required");
@@ -299,20 +305,18 @@ public class StartActivity extends AppCompatActivity {
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd.MM.yyyy");
         saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap = new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
-
-        currentUserID = mAuth.getCurrentUser().getUid();
+            onlineStateMap.put("time", saveCurrentTime);
+            onlineStateMap.put("date", saveCurrentDate);
+            onlineStateMap.put("state", state);
 
         mRef.child("Users").child(currentUserID).child("user_state")
-                .updateChildren(onlineStateMap);
+            .updateChildren(onlineStateMap);
     }
 }

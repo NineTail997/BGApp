@@ -53,10 +53,10 @@ public class FindFriendsActivity extends AppCompatActivity {
                 .setQuery(usersRef, Contacts.class)
                 .build();
 
-        FirebaseRecyclerAdapter<Contacts, FindFriendViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Contacts, FindFriendViewHolder>(options) {
+        FirebaseRecyclerAdapter<Contacts, findFriendViewHolder> adapter =
+                new FirebaseRecyclerAdapter<Contacts, findFriendViewHolder>(options) {
                     @Override
-                    protected void onBindViewHolder(@NonNull FindFriendViewHolder holder, final int position, @NonNull Contacts model) {
+                    protected void onBindViewHolder(@NonNull findFriendViewHolder holder, final int position, @NonNull Contacts model) {
                         holder.userName.setText(model.getName());
                         holder.userStatus.setText(model.getStatus());
                         Glide.with(FindFriendsActivity.this)
@@ -78,9 +78,9 @@ public class FindFriendsActivity extends AppCompatActivity {
 
                     @NonNull
                     @Override
-                    public FindFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                    public findFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout, parent, false);
-                        FindFriendViewHolder viewHolder = new FindFriendViewHolder(view);
+                        findFriendViewHolder viewHolder = new findFriendViewHolder(view);
                         return viewHolder;
                     }
                 };
@@ -89,11 +89,11 @@ public class FindFriendsActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
-    public static class FindFriendViewHolder extends RecyclerView.ViewHolder {
+    public static class findFriendViewHolder extends RecyclerView.ViewHolder {
         TextView userName, userStatus;
         ImageView profileImage;
 
-        public FindFriendViewHolder(@NonNull View itemView) {
+        public findFriendViewHolder(@NonNull View itemView) {
             super(itemView);
 
             userName = itemView.findViewById(R.id.user_profile_name);

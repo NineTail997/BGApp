@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateEventActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/DarkGreen" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_text_event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/toolbar"
+                android:hint="Enter event name"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/edit_text_additional_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_event_name"
+                android:hint="Additional information"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/edit_text_available_slots"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_event_name"
+                android:hint="Type how much people can participate"
+                android:textAlignment="center"
+                android:inputType="numberSigned" />
+
+            <TextView
+                android:id="@+id/event_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_additional_information"
+                android:layout_gravity="center"
+                android:layout_marginTop="7dp"
+                android:text="DD.MM.YYYY"
+                android:textSize="22dp" />
+
+            <DatePicker
+                android:id="@+id/event_date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_date_text_view"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/event_date_picker_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_additional_information"
+                android:layout_gravity="center"
+                android:layout_toEndOf="@+id/event_date_text_view"
+                android:background="@drawable/rounded_button_solid"
+                android:text=" Edit event date "
+                android:textAllCaps="false" />
+
+            <TextView
+                android:id="@+id/event_time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_date_picker_button"
+                android:layout_gravity="center"
+                android:layout_marginTop="7dp"
+                android:text="HH:MM"
+                android:textSize="22dp" />
+
+            <TimePicker
+                android:id="@+id/event_time_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_time_text_view"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/event_time_picker_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_date_picker_button"
+                android:layout_gravity="center"
+                android:layout_toEndOf="@+id/event_date_text_view"
+                android:background="@drawable/rounded_button_solid"
+                android:text=" Edit event time "
+                android:textAllCaps="false" />
+
+            <EditText
+                android:id="@+id/edit_text_event_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/event_time_picker_button"
+                android:hint="Provide event address"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/edit_text_event_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_event_place"
+                android:hint="Event password (optional)"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/save_event_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/edit_text_event_password"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@+id/event_date_text_view"
+                android:background="@drawable/rounded_button_solid"
+                android:text="Save event"
+                android:textAllCaps="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

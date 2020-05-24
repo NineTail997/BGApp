@@ -16,6 +16,8 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:textStyle="bold"
         android:textAlignment="center"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
@@ -49,6 +51,7 @@
         android:id="@+id/editTextDisplayName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:visibility="invisible"
         android:hint="Enter Display Name" />
 
@@ -56,6 +59,7 @@
         android:id="@+id/editTextStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAlignment="center"
         android:hint="Add  your status" />
 
     <Button
@@ -81,6 +85,5 @@
         android:paddingRight="55dp"
         android:text="Move to app"
         android:textAllCaps="false" />
-
 
 </LinearLayout>

@@ -109,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.createNewEvent:
-                requestNewEvent();
+                Intent createEventIntent = new Intent(MainActivity.this, CreateEventActivity.class);
+                startActivity(createEventIntent);
                 break;
 
             case R.id.findFriends:
                 startActivity(new Intent(this, FindFriendsActivity.class));
-                finish();
                 break;
 
             case R.id.menuLogout:

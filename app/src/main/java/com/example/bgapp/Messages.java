@@ -1,15 +1,16 @@
 package com.example.bgapp;
 
 public class Messages {
-    private String from, to, message, messageID, type, time, date;
+    private String from, to, name, message, messageID, type, time, date;
 
     public Messages() {
 
     }
 
-    public Messages(String from, String to, String message, String messageID, String type, String time, String date) {
+    public Messages(String from, String to, String name, String message, String messageID, String type, String time, String date) {
         this.from = from;
         this.to = to;
+        this.name = name;
         this.message = message;
         this.messageID = messageID;
         this.type = type;
@@ -31,6 +32,14 @@ public class Messages {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getMessage() {

@@ -1,5 +1,6 @@
 package com.example.bgapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -68,7 +69,7 @@ public class ContactsFragment extends Fragment {
                 .build();
         FirebaseRecyclerAdapter<Contacts, contactsViewHolder> adapter = new FirebaseRecyclerAdapter<Contacts, contactsViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull final contactsViewHolder holder, int position, @NonNull Contacts model) {
+            protected void onBindViewHolder(@NonNull final contactsViewHolder holder, final int position, @NonNull Contacts model) {
                 String usersID = getRef(position).getKey();
 
                 usersRef.child(usersID).addValueEventListener(new ValueEventListener() {
@@ -91,6 +92,17 @@ public class ContactsFragment extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                    }
+                });
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String visit_user_id = getRef(position).getKey();
+
+                        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                        intent.putExtra("visit_user_id", visit_user_id);
+                        startActivity(intent);
                     }
                 });
             }
@@ -119,7 +131,6 @@ public class ContactsFragment extends Fragment {
             userName = itemView.findViewById(R.id.user_profile_name);
             userStatus = itemView.findViewById(R.id.user_status);
             userImage = itemView.findViewById(R.id.users_profile_image);
-
         }
     }
 }

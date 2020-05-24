@@ -47,7 +47,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return "Events";
             case 2:
-                return "Contacts";
+                return "Friends";
             case 3:
                 return "Requests";
             default:

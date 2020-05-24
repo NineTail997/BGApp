@@ -198,10 +198,10 @@ public class PrivateMessageActivity extends AppCompatActivity {
         userMessagesList.setAdapter(messageAdapter);
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd.MM.yyyy");
         saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
