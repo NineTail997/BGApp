@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/profile_activity"
+    tools:context=".ProfileActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="185dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/event_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:text="event name"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="45sp"
+            android:textStyle="bold"
+            android:textColor="@color/Linen"
+            app:fontFamily="@font/love_ya_like_a_sister" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/event_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_name"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_time_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_information"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/event_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_time_date"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/current_participants"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_address"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Current participants:"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/event_participants"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@+id/current_participants"
+            android:layout_marginTop="5dp"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/taken_slots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/event_address"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="taken slots"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/invite_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="25dp"
+                android:textAlignment="center"
+                android:background="@drawable/rounded_blue_button_solid"
+                android:text="     Invite friend     "
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/join_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="25dp"
+                android:textAlignment="center"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="      Join event      "
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/exit_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="25dp"
+                android:textAlignment="center"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="     Exit event     "
+                android:textAllCaps="false"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

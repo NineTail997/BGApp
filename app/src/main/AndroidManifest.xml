@@ -11,15 +11,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CreateEventActivity"></activity>
+        <activity android:name=".EventInformationActivity"></activity>
+        <activity android:name=".CreateEventActivity" />
         <activity
             android:name=".PrivateMessageActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".FindFriendsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".EventChatActivity" />
+        <activity android:name=".EventChatActivity">
+            android:parentActivityName=".MainActivity"
+        </activity>
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".SignInActivity">
             <intent-filter>

@@ -3,14 +3,15 @@ package com.example.bgapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +55,6 @@ public class EventChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_chat);
 
         currentEventName = getIntent().getExtras().get("eventName").toString();
-        Toast.makeText(EventChatActivity.this, currentEventName, Toast.LENGTH_SHORT).show();
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -97,7 +97,7 @@ public class EventChatActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
                                     userImageUrl = dataSnapshot.child("image").getValue().toString();
-                                    Glide.with(EventChatActivity.this)
+                                    Glide.with(getApplicationContext())
                                             .load(userImageUrl)
                                             .placeholder(R.drawable.default_image)
                                             .into(holder.profileImage);
@@ -176,6 +176,22 @@ public class EventChatActivity extends AppCompatActivity {
                 messageInfoMap.put("date", currentDate);
                 messageInfoMap.put("time", currentTime);
             eventMessageKeyRef.updateChildren(messageInfoMap);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                Intent intent = new Intent(EventChatActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

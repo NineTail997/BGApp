@@ -92,7 +92,7 @@ public class ChatsFragment extends Fragment {
                                     } else holder.userStatus.setText("Offline");
 
                                     holder.userName.setText(profileName);
-                                    Glide.with(ChatsFragment.this)
+                                    Glide.with(getContext())
                                             .load(profileImage)
                                             .placeholder(R.drawable.default_image)
                                             .into(holder.userImage);

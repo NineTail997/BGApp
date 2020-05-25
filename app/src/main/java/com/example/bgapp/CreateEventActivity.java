@@ -1,5 +1,6 @@
 package com.example.bgapp;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -34,7 +35,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference usersRef, eventRef;
 
-    private String currentUserName, currentUserID;
+    private String currentUserName, currentUserID, currentUserImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class CreateEventActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         currentUserName = user.getDisplayName();
         currentUserID = user.getUid();
+        currentUserImage = user.getPhotoUrl().toString();
         eventRef = FirebaseDatabase.getInstance().getReference().child("Events");
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -164,21 +166,36 @@ public class CreateEventActivity extends AppCompatActivity {
                         Toast.makeText(CreateEventActivity.this, "Event must have more than one participant", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
+                        if (saveEventPassword.isEmpty()) saveEventPassword = null;
                         HashMap<String, Object> eventMap = new HashMap<>();
-                        eventMap.put("creatorID", currentUserID);
-                        eventMap.put("slots", saveAvailableSlots);
-                        eventMap.put("information", saveEventInformation);
-                        eventMap.put("address", saveEventAddress);
-                        eventMap.put("password", saveEventPassword);
-                        eventMap.put("time", saveEventTime);
-                        eventMap.put("date", saveEventDate);
+                            eventMap.put("creatorID", currentUserID);
+                            eventMap.put("slots", saveAvailableSlots);
+                            eventMap.put("information", saveEventInformation);
+                            eventMap.put("address", saveEventAddress);
+                            eventMap.put("password", saveEventPassword);
+                            eventMap.put("time", saveEventTime);
+                            eventMap.put("date", saveEventDate);
                         eventRef.child(saveEventName).child("Information").updateChildren(eventMap);
 
+                        HashMap<String, Object> eventCreator = new HashMap<>();
+                            eventCreator.put("name", currentUserName);
+                            eventCreator.put("status", "Event creator");
+                            eventCreator.put("image", currentUserImage);
+                        eventRef.child(saveEventName).child("Participants").child(currentUserID).updateChildren(eventCreator);
+
                         Toast.makeText(CreateEventActivity.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                        moveToMain();
                     }
                 }
             }
         });
+    }
+
+    private void moveToMain() {
+        finish();
+        Intent intent = new Intent(CreateEventActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void initializeFields() {

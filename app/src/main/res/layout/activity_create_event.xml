@@ -72,7 +72,7 @@
                 android:layout_below="@+id/edit_text_additional_information"
                 android:layout_gravity="center"
                 android:layout_toEndOf="@+id/event_date_text_view"
-                android:background="@drawable/rounded_button_solid"
+                android:background="@drawable/rounded_green_button_solid"
                 android:text=" Edit event date "
                 android:textAllCaps="false" />
 
@@ -101,7 +101,7 @@
                 android:layout_below="@+id/event_date_picker_button"
                 android:layout_gravity="center"
                 android:layout_toEndOf="@+id/event_date_text_view"
-                android:background="@drawable/rounded_button_solid"
+                android:background="@drawable/rounded_green_button_solid"
                 android:text=" Edit event time "
                 android:textAllCaps="false" />
 
@@ -129,7 +129,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@+id/event_date_text_view"
-                android:background="@drawable/rounded_button_solid"
+                android:background="@drawable/rounded_green_button_solid"
                 android:text="Save event"
                 android:textAllCaps="false" />
 

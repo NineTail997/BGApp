@@ -128,18 +128,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void requestNewEvent() {
+    private void requestEvent() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
-        builder.setTitle("Enter  Event Name :");
+        builder.setTitle("Enter  correct password:");
 
-        final EditText eventNameField = new EditText(MainActivity.this);
-        eventNameField.setHint("e.g Playing Civilisation: Through The Ages ");
-        builder.setView(eventNameField);
+        final EditText eventPassword = new EditText(MainActivity.this);
+        eventPassword.setHint("password");
+        builder.setView(eventPassword);
 
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String eventName = eventNameField.getText().toString();
+                String eventName = eventPassword.getText().toString();
 
                 if (TextUtils.isEmpty(eventName)){
                     Toast.makeText(MainActivity.this, "Please write event name", Toast.LENGTH_SHORT).show();
