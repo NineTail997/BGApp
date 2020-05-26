@@ -144,6 +144,8 @@ public class EventChatActivity extends AppCompatActivity {
     private void initializeFields() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(currentEventName + " - event chat room");
         sendMessageButton = (ImageButton) findViewById(R.id.send_message);
         userMessageInput = (EditText) findViewById(R.id.input_message);

@@ -2,6 +2,7 @@ package com.example.bgapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class RequestFragment extends Fragment {
     private View requestFragmentView;
     private RecyclerView myRequestList;
 
-    private DatabaseReference requestsRef, usersRef, contactsRef;
+    private DatabaseReference requestsRef, usersRef, contactsRef, eventRequestsRef;
     private FirebaseAuth mAuth;
 
     private String currentUserID;
@@ -59,7 +60,7 @@ public class RequestFragment extends Fragment {
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         requestsRef = FirebaseDatabase.getInstance().getReference().child("Chat requests");
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts");
-
+        eventRequestsRef = FirebaseDatabase.getInstance().getReference().child("Event requests").child(currentUserID);
 
         myRequestList = (RecyclerView) requestFragmentView.findViewById(R.id.friend_request_list);
         myRequestList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -371,8 +372,82 @@ public class RequestFragment extends Fragment {
                     }
                 };
 
+        FirebaseRecyclerOptions<Contacts> eventOptions =
+                new FirebaseRecyclerOptions.Builder<Contacts>()
+                        .setQuery(eventRequestsRef, Contacts.class)
+                        .build();
+
+        FirebaseRecyclerAdapter<Contacts, requestsViewHolder> eventAdapter =
+                new FirebaseRecyclerAdapter<Contacts, requestsViewHolder>(eventOptions) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull final requestsViewHolder holder, final int position, @NonNull final Contacts model) {
+                        final String eventName = getRef(position).getKey();
+                        eventRequestsRef.child(eventName).child("invited_by")
+                                .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()) {
+                                    String inviterID = dataSnapshot.getValue().toString();
+                                    usersRef.child(inviterID).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            holder.userName.setText(dataSnapshot.child("name").getValue().toString());
+                                            holder.userStatus.setText(" invited you to event:\n " + eventName);
+                                            Glide.with(getContext())
+                                                    .load(dataSnapshot.child("image").getValue().toString())
+                                                    .placeholder(R.drawable.default_image)
+                                                    .into(holder.userImage);
+
+                                            holder.acceptButton.setVisibility(View.VISIBLE);
+                                            holder.rejectButton.setVisibility(View.VISIBLE);
+
+                                            holder.acceptButton.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    cancelInvitation(eventName);
+                                                    joinEvent(eventName, "no");
+                                                }
+                                            });
+
+                                            holder.rejectButton.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    cancelInvitation(eventName);
+                                                    Toast.makeText(getContext(), "Invitation cancelled", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+
+                    @NonNull
+                    @Override
+                    public requestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout, parent, false);
+                        requestsViewHolder viewHolder = new requestsViewHolder(view);
+                        return viewHolder;
+                    }
+                };
+
         myRequestList.setAdapter(adapter);
         adapter.startListening();
+
+        myRequestList.setAdapter(eventAdapter);
+        eventAdapter.startListening();
     }
 
     public static class requestsViewHolder extends RecyclerView.ViewHolder {
@@ -389,5 +464,25 @@ public class RequestFragment extends Fragment {
             acceptButton = itemView.findViewById(R.id.request_accept_button);
             rejectButton = itemView.findViewById(R.id.request_reject_button);
         }
+    }
+
+    private void joinEvent(String currentEventName, String isEventParticipant) {
+        Intent eventChatIntent = new Intent(getContext(), EventInformationActivity.class);
+        eventChatIntent.putExtra("eventName", currentEventName);
+        eventChatIntent.putExtra("isEventParticipant", isEventParticipant);
+        startActivity(eventChatIntent);
+    }
+
+    private void cancelInvitation(String currentEventName) {
+        eventRequestsRef.child(currentEventName)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), "Action confirmed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

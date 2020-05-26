@@ -81,32 +81,34 @@ public class ChatsFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    final String profileImage = dataSnapshot.child("image").getValue().toString();
-                                    final String profileName = dataSnapshot.child("name").getValue().toString();
-                                    final String profileStatus = dataSnapshot.child("status").getValue().toString();
+                                    if(isAdded()) {
+                                        final String profileImage = dataSnapshot.child("image").getValue().toString();
+                                        final String profileName = dataSnapshot.child("name").getValue().toString();
+                                        final String profileStatus = dataSnapshot.child("status").getValue().toString();
 
-                                    if((dataSnapshot.hasChild("user_state"))) {
-                                        String date = dataSnapshot.child("user_state").child("date").getValue().toString();
-                                        String time = dataSnapshot.child("user_state").child("time").getValue().toString();
-                                        holder.userStatus.setText("Last seen:\n" + date + " " + time);
-                                    } else holder.userStatus.setText("Offline");
+                                        if((dataSnapshot.hasChild("user_state"))) {
+                                            String date = dataSnapshot.child("user_state").child("date").getValue().toString();
+                                            String time = dataSnapshot.child("user_state").child("time").getValue().toString();
+                                            holder.userStatus.setText("Last seen:\n" + date + " " + time);
+                                        } else holder.userStatus.setText("Offline");
 
-                                    holder.userName.setText(profileName);
-                                    Glide.with(getContext())
-                                            .load(profileImage)
-                                            .placeholder(R.drawable.default_image)
-                                            .into(holder.userImage);
+                                        holder.userName.setText(profileName);
+                                        Glide.with(getContext())
+                                                .load(profileImage)
+                                                .placeholder(R.drawable.default_image)
+                                                .into(holder.userImage);
 
-                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            Intent chatIntent = new Intent(getContext(), PrivateMessageActivity.class);
-                                            chatIntent.putExtra("visit_user_id", usersID);
-                                            chatIntent.putExtra("visit_user_name", profileName);
-                                            chatIntent.putExtra("visit_user_image", profileImage);
-                                            startActivity(chatIntent);
-                                        }
-                                    });
+                                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent chatIntent = new Intent(getContext(), PrivateMessageActivity.class);
+                                                chatIntent.putExtra("visit_user_id", usersID);
+                                                chatIntent.putExtra("visit_user_name", profileName);
+                                                chatIntent.putExtra("visit_user_image", profileImage);
+                                                startActivity(chatIntent);
+                                            }
+                                        });
+                                    }
                                 }
                             }
 

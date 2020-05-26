@@ -75,7 +75,7 @@ public class PrivateMessageActivity extends AppCompatActivity {
         initializeControllers();
 
         userName.setText(messageReceiverName);
-        Glide.with(PrivateMessageActivity.this)
+        Glide.with(getApplicationContext())
                 .load(messageReceiverImage)
                 .placeholder(R.drawable.default_image)
                 .into(userImage);
@@ -213,6 +213,7 @@ public class PrivateMessageActivity extends AppCompatActivity {
                             String state = dataSnapshot.child("user_state").child("state").getValue().toString();
                             String date = dataSnapshot.child("user_state").child("date").getValue().toString();
                             String time = dataSnapshot.child("user_state").child("time").getValue().toString();
+
 
                             userLastSeen.setText("Last seen: " + date + " " + time);
                         } else {

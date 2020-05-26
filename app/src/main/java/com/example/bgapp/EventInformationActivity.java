@@ -3,12 +3,11 @@ package com.example.bgapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -94,6 +93,7 @@ public class EventInformationActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Contacts, participantsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull participantsViewHolder holder, final int position, @NonNull Contacts model) {
+
                         holder.userName.setText(model.getName());
                         holder.userStatus.setText(model.getStatus());
                         Glide.with(getApplicationContext())
@@ -106,7 +106,10 @@ public class EventInformationActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 if (currentUserID.equals(eventCreatorID)) {
                                     String selectedUserID = getRef(position).getKey();
-                                    removeUserFromEvent(selectedUserID);
+                                    if (selectedUserID.equals(currentUserID))
+                                    {
+                                        Toast.makeText(getApplicationContext(), "You can't remove event creator from event", Toast.LENGTH_SHORT).show();
+                                    } else removeUserFromEvent(selectedUserID);
                                 }
                             }
                         });
@@ -123,6 +126,13 @@ public class EventInformationActivity extends AppCompatActivity {
         showEventParticipantsList.setAdapter(adapter);
         adapter.startListening();
 
+        inviteFriendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToInviteFriendActivity();
+            }
+        });
+
         joinEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,27 +141,53 @@ public class EventInformationActivity extends AppCompatActivity {
                         eventParticipant.put("name", currentUserName);
                         eventParticipant.put("status", "Participant");
                         eventParticipant.put("image", currentUserImage);
-                    eventRef.child(currentEventName).child("Participants").child(currentUserID).updateChildren(eventParticipant);
+                    eventRef.child(currentEventName).child("Participants").child(currentUserID).updateChildren(eventParticipant)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    enterEventChatRoom();
+                                }
+                            }
+                        });
                 }
-                enterEventChatRoom();
             }
         });
 
+        exitEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isUserEventParticipant.equals("yes")) {
+                    if (currentUserID.equals(eventCreatorID)) {
+                        deleteEvent();
+                    } else {
+                        removeUserFromEvent(currentUserID);
+                    }
+                } else moveToMain();
+            }
+        });
     }
 
-    private void removeUserFromEvent(final String selectedUserID) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(EventInformationActivity.this, R.style.AlertDialog);
-        builder.setTitle("Do you want to remove this user from your event?:");
-        final String userID = selectedUserID;
+    private void moveToMain() {
+        Intent intent = new Intent(EventInformationActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
-        builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+    private void deleteEvent() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventInformationActivity.this, R.style.AlertDialog);
+        builder.setTitle("Do you want to delete this event?:");
+
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                participantsRef.child(selectedUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                eventRef.child(currentEventName).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "User successfully removed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Event successfully deleted", Toast.LENGTH_SHORT).show();
+                            moveToMain();
                         }
                     }
                 });
@@ -168,9 +204,55 @@ public class EventInformationActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void removeUserFromEvent(final String selectedUserID) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventInformationActivity.this, R.style.AlertDialog);
+        String dialogTitle, buttonTitle;
+        final String userID = selectedUserID;
+        if (currentUserID.equals(selectedUserID)) {
+            dialogTitle = "Do you want to exit this event?";
+            buttonTitle = "Exit";
+        } else {
+            dialogTitle = "Do you want to remove this user from your event?";
+            buttonTitle = "Remove";
+        }
+        builder.setTitle(dialogTitle);
+
+        builder.setPositiveButton(buttonTitle, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                participantsRef.child(selectedUserID).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(EventInformationActivity.this, "User successfully removed", Toast.LENGTH_SHORT).show();
+                            if (!currentUserID.equals(eventCreatorID)) {
+                                moveToMain();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void goToInviteFriendActivity() {
+        Intent eventInvitationIntent = new Intent(getApplicationContext(), EventInvitationActivity.class);
+        eventInvitationIntent.putExtra("eventName", currentEventName);
+        eventInvitationIntent.putExtra("isEventParticipant", isUserEventParticipant);
+        startActivity(eventInvitationIntent);
+    }
+
     private void enterEventChatRoom() {
-        Toast.makeText(getApplicationContext(), "You successfully joined to the event", Toast.LENGTH_SHORT).show();
-        Intent eventChatIntent = new Intent(getApplicationContext(), EventChatActivity.class);
+        Intent eventChatIntent = new Intent(EventInformationActivity.this, EventChatActivity.class);
         eventChatIntent.putExtra("eventName", currentEventName);
         eventChatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(eventChatIntent);
@@ -200,7 +282,7 @@ public class EventInformationActivity extends AppCompatActivity {
                         joinEventButton.setText(" Event chat room ");
                     }
                     if (currentUserID.equals(eventCreatorID)) {
-                        exitEventButton.setText("  Delete event  ");
+                        exitEventButton.setText("     Delete event     ");
                     }
                     if (participantsCount>=Integer.parseInt(availableEventSlots)) {
                         if (!isUserEventParticipant.equals("yes")) {

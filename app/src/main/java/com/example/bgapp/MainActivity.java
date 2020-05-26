@@ -1,24 +1,18 @@
 package com.example.bgapp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -77,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } //else updateUserStatus("online");
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -128,48 +121,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void requestEvent() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AlertDialog);
-        builder.setTitle("Enter  correct password:");
-
-        final EditText eventPassword = new EditText(MainActivity.this);
-        eventPassword.setHint("password");
-        builder.setView(eventPassword);
-
-        builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String eventName = eventPassword.getText().toString();
-
-                if (TextUtils.isEmpty(eventName)){
-                    Toast.makeText(MainActivity.this, "Please write event name", Toast.LENGTH_SHORT).show();
-                } else {
-                    createNewEvent(eventName);
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
-
-    private void createNewEvent(final String eventName) {
-        mRef.child("Events").child(eventName).setValue("").addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(MainActivity.this, eventName + " event is created successfully", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void verifyUserInformation(){
         String currentUserID = mAuth.getCurrentUser().getUid();
 
@@ -197,16 +148,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String saveCurrentTime, saveCurrentDate;
 
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd MMM yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd.MM.yyyy");
         saveCurrentDate = currentDate.format(calendar.getTime());
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         saveCurrentTime = currentTime.format(calendar.getTime());
 
         HashMap<String, Object> onlineStateMap = new HashMap<>();
-        onlineStateMap.put("time", saveCurrentTime);
-        onlineStateMap.put("date", saveCurrentDate);
-        onlineStateMap.put("state", state);
+            onlineStateMap.put("time", saveCurrentTime);
+            onlineStateMap.put("date", saveCurrentDate);
+            onlineStateMap.put("state", state);
 
         currentUserID = mAuth.getCurrentUser().getUid();
 

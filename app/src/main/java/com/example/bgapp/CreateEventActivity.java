@@ -3,6 +3,7 @@ package com.example.bgapp;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -201,6 +202,8 @@ public class CreateEventActivity extends AppCompatActivity {
     private void initializeFields() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Event creator");
 
         eventName = (EditText) findViewById(R.id.edit_text_event_name);
@@ -218,5 +221,21 @@ public class CreateEventActivity extends AppCompatActivity {
         editEventTime = (Button) findViewById(R.id.event_time_picker_button);
         editEventDate = (Button) findViewById(R.id.event_date_picker_button);
         saveEvent = (Button) findViewById(R.id.save_event_button);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                Intent intent = new Intent(CreateEventActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

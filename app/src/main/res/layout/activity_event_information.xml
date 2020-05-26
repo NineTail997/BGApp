@@ -95,7 +95,7 @@
             android:layout_height="160dp"
             android:layout_below="@+id/current_participants"
             android:layout_marginTop="5dp"
-            >
+            android:scrollbars="vertical">
         </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
@@ -112,17 +112,16 @@
             android:textStyle="bold"
             android:text="taken slots"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
             <Button
                 android:id="@+id/invite_friend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="10dp"
                 android:textAlignment="center"
                 android:background="@drawable/rounded_blue_button_solid"
                 android:text="     Invite friend     "
@@ -132,8 +131,8 @@
                 android:id="@+id/join_event"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_centerInParent="true"
                 android:textAlignment="center"
                 android:background="@drawable/rounded_green_button_solid"
                 android:text="      Join event      "
@@ -144,14 +143,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="25dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
                 android:textAlignment="center"
                 android:background="@drawable/rounded_red_button_solid"
-                android:text="     Exit event     "
+                android:text="      Exit event      "
                 android:textAllCaps="false"
                 />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

@@ -59,7 +59,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull findFriendViewHolder holder, final int position, @NonNull Contacts model) {
                         holder.userName.setText(model.getName());
                         holder.userStatus.setText(model.getStatus());
-                        Glide.with(FindFriendsActivity.this)
+                        Glide.with(getApplicationContext())
                                 .load(model.getImage())
                                 .placeholder(R.drawable.default_image)
                                 .into(holder.profileImage);

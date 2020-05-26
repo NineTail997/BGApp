@@ -1,5 +1,7 @@
 package com.example.bgapp;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,7 +77,9 @@ public class EventsFragment extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists() && dataSnapshot.hasChild(currentUserID)) {
-                            accessRoom(currentEventName, "yes");
+                            if (isAdded()) {
+                                accessRoom(currentEventName, "yes");
+                            }
                         } else {
                             mRef.child(currentEventName).child("Information").child("password")
                                     .addValueEventListener(new ValueEventListener() {
@@ -84,7 +88,9 @@ public class EventsFragment extends Fragment {
                                             if (dataSnapshot.exists()) {
                                                 eventRoomPassword = dataSnapshot.getValue().toString();
                                                 requestEvent(currentEventName);
-                                            } else accessRoom(currentEventName, "no");
+                                            } else if (isAdded()) {
+                                                accessRoom(currentEventName, "no");
+                                            }
                                         }
 
                                         @Override
@@ -128,7 +134,9 @@ public class EventsFragment extends Fragment {
 
                 if (enteredPassword.equals(eventRoomPassword)){
                     Toast.makeText(getContext(), "Correct password", Toast.LENGTH_SHORT).show();
-                    accessRoom(currentEventName, "no");
+                    if (isAdded()) {
+                        accessRoom(currentEventName, "no");
+                    }
                 } else {
                     Toast.makeText(getContext(), "Wrong password", Toast.LENGTH_SHORT).show();
                 }
@@ -151,7 +159,6 @@ public class EventsFragment extends Fragment {
         eventChatIntent.putExtra("eventName", currentEventName);
         eventChatIntent.putExtra("isEventParticipant", isEventParticipant);
         startActivity(eventChatIntent);
-        Toast.makeText(getContext(), "You successfully entered event room", Toast.LENGTH_SHORT).show();
     }
 
     private void retrieveAndDisplayEvents() {
