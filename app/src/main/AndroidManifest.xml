@@ -11,7 +11,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EventInvitationActivity"/>
+        <activity android:name=".TriominoActivity"></activity>
+        <activity android:name=".EventInvitationActivity" />
         <activity android:name=".EventInformationActivity" />
         <activity android:name=".CreateEventActivity" />
         <activity
@@ -21,7 +22,8 @@
         <activity
             android:name=".FindFriendsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".EventChatActivity"
+        <activity
+            android:name=".EventChatActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".SignInActivity">

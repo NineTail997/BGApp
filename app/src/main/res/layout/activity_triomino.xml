@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TriominoActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/DarkGreen" />
+
+    <EditText
+        android:id="@+id/add_player_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:textAlignment="center"
+        android:hint="add players in correct order" />
+
+    <TextView
+        android:id="@+id/current_player_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_player_edit_text"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/score_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/current_player_name"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/add_player_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/score_list"
+        android:background="@drawable/rounded_blue_button_solid"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="Add player"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/start_game_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/score_list"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/rounded_green_button_solid"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="Start game"
+        android:textAllCaps="false" />
+
+    <LinearLayout
+        android:id="@+id/add_points"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/current_player_name"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_15_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 15"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/add_14_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 14"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_13_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 13"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_12_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 12"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_11_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 11"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_10_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 10"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_9_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 9"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_8_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 8"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_7_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 7"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_6_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 6"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_5_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 5"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_4_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 4"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_3_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 3"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_2_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 2"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/add_1_point"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_green_button_solid"
+                android:text="+ 1"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/add_0_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_blue_button_solid"
+                android:text="+ 0"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/minus_1_point"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="- 1"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/minus_2_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="- 2"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/minus_3_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="- 3"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/minus_4_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="- 4"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/minus_5_points"
+                android:layout_width="100dp"
+                android:layout_height="40sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/rounded_red_button_solid"
+                android:text="- 5"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/plus_40_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_alignParentLeft="true"
+                android:text="+ 40"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/plus_50_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:text="+ 50"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <CheckBox
+                android:id="@+id/plus_60_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:text="+ 60"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/player_score"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_points"
+        android:text="current score"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/winner_additional_points"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_score"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:visibility="gone"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:hint="Enter winner additional points" />
+
+    <Button
+        android:id="@+id/next_player_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/winner_additional_points"
+        android:background="@drawable/rounded_blue_button_solid"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="Next player"
+        android:textAllCaps="false"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/set_winner_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/winner_additional_points"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/rounded_green_button_solid"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:text="Set winner"
+        android:textAllCaps="false"
+        android:visibility="invisible"/>
+
+</RelativeLayout>

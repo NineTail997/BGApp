@@ -86,4 +86,16 @@
         android:text="Move to app"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/buttonPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_green_button_solid"
+        android:paddingLeft="55dp"
+        android:paddingRight="55dp"
+        android:text="  Play game "
+        android:textAllCaps="false" />
+
 </LinearLayout>

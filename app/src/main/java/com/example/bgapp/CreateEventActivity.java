@@ -12,15 +12,23 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 public class CreateEventActivity extends AppCompatActivity {
@@ -36,7 +44,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference usersRef, eventRef;
 
-    private String currentUserName, currentUserID, currentUserImage;
+    private String currentUserName, currentUserID, currentUserImage, isTimeValid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,13 +146,15 @@ public class CreateEventActivity extends AppCompatActivity {
         saveEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String saveEventName = eventName.getText().toString();
-                String saveEventInformation = eventInformation.getText().toString();
-                String saveEventAddress = eventAddress.getText().toString();
-                String saveEventPassword = eventPassword.getText().toString();
-                String saveEventTime = eventTime.getText().toString();
-                String saveEventDate = eventDate.getText().toString();
-                String saveAvailableSlots = availableSlots.getText().toString();
+                final String saveEventName = eventName.getText().toString();
+                final String saveEventInformation = eventInformation.getText().toString();
+                final String saveEventAddress = eventAddress.getText().toString();
+                final String[] saveEventPassword = {eventPassword.getText().toString()};
+                final String saveEventTime = eventTime.getText().toString();
+                final String saveEventDate = eventDate.getText().toString();
+                final String saveAvailableSlots = availableSlots.getText().toString();
+
+                checkEventTime(saveEventDate, saveEventTime);
 
                 if (saveEventName.isEmpty()) {
                     Toast.makeText(CreateEventActivity.this, "You have to enter event name first", Toast.LENGTH_SHORT).show();
@@ -158,6 +168,9 @@ public class CreateEventActivity extends AppCompatActivity {
                 } else if (saveEventTime.equals("HH:MM")) {
                     Toast.makeText(CreateEventActivity.this, "You have to select event time first", Toast.LENGTH_SHORT).show();
                     return;
+                } else if (isTimeValid == "no") {
+                    Toast.makeText(CreateEventActivity.this, "Event can't be created with selected time\nChoose time and date at least 30 min from now", Toast.LENGTH_SHORT).show();
+                    return;
                 } else if (saveAvailableSlots.isEmpty()) {
                     Toast.makeText(CreateEventActivity.this, "You have to enter how many people can participate", Toast.LENGTH_SHORT).show();
                     return;
@@ -167,25 +180,39 @@ public class CreateEventActivity extends AppCompatActivity {
                         Toast.makeText(CreateEventActivity.this, "Event must have more than one participant", Toast.LENGTH_SHORT).show();
                         return;
                     } else {
-                        if (saveEventPassword.isEmpty()) saveEventPassword = null;
-                        HashMap<String, Object> eventMap = new HashMap<>();
-                            eventMap.put("creatorID", currentUserID);
-                            eventMap.put("slots", saveAvailableSlots);
-                            eventMap.put("information", saveEventInformation);
-                            eventMap.put("address", saveEventAddress);
-                            eventMap.put("password", saveEventPassword);
-                            eventMap.put("time", saveEventTime);
-                            eventMap.put("date", saveEventDate);
-                        eventRef.child(saveEventName).child("Information").updateChildren(eventMap);
+                        eventRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists() && dataSnapshot.hasChild(saveEventName)) {
+                                    Toast.makeText(CreateEventActivity.this, "There is already event using that name\nPlease type different event name", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (saveEventPassword[0].isEmpty()) saveEventPassword[0] = null;
+                                    HashMap<String, Object> eventMap = new HashMap<>();
+                                        eventMap.put("creatorID", currentUserID);
+                                        eventMap.put("slots", saveAvailableSlots);
+                                        eventMap.put("information", saveEventInformation);
+                                        eventMap.put("address", saveEventAddress);
+                                        eventMap.put("password", saveEventPassword[0]);
+                                        eventMap.put("time", saveEventTime);
+                                        eventMap.put("date", saveEventDate);
+                                    eventRef.child(saveEventName).child("Information").updateChildren(eventMap);
 
-                        HashMap<String, Object> eventCreator = new HashMap<>();
-                            eventCreator.put("name", currentUserName);
-                            eventCreator.put("status", "Event creator");
-                            eventCreator.put("image", currentUserImage);
-                        eventRef.child(saveEventName).child("Participants").child(currentUserID).updateChildren(eventCreator);
+                                    HashMap<String, Object> eventCreator = new HashMap<>();
+                                        eventCreator.put("name", currentUserName);
+                                        eventCreator.put("status", "Event creator");
+                                        eventCreator.put("image", currentUserImage);
+                                    eventRef.child(saveEventName).child("Participants").child(currentUserID).updateChildren(eventCreator);
 
-                        Toast.makeText(CreateEventActivity.this, "Event created successfully", Toast.LENGTH_SHORT).show();
-                        moveToMain();
+                                    Toast.makeText(CreateEventActivity.this, "Event created successfully", Toast.LENGTH_SHORT).show();
+                                    moveToMain();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 }
             }
@@ -197,6 +224,35 @@ public class CreateEventActivity extends AppCompatActivity {
         Intent intent = new Intent(CreateEventActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    private void checkEventTime(String date, String time) {
+        String currentTime;
+        String selectedEventTime = date + " " + time;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 29);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        currentTime = sdf.format(calendar.getTime());
+
+        Date currentDate = null;
+        try {
+            currentDate = sdf.parse(currentTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date selectedDate = null;
+        try {
+            selectedDate = sdf.parse(selectedEventTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(selectedDate != null && currentDate != null) {
+            if (!selectedDate.after(currentDate)) {
+                isTimeValid = "no";
+            } else isTimeValid = "yes";
+        }
     }
 
     private void initializeFields() {

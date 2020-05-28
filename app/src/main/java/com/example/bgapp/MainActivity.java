@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mAuth = FirebaseAuth.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
         currentUser = mAuth.getCurrentUser();
+        currentUserID = mAuth.getCurrentUser().getUid();
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,7 +70,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (currentUser == null) {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
-        } //else updateUserStatus("online");
+        } else updateUserStatus("online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        updateUserStatus("offline");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        updateUserStatus("offline");
     }
 
     @Override
@@ -116,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 logoutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(logoutIntent);
                 finish();
+                FirebaseAuth.getInstance().signOut();
                 break;
         }
         return true;
@@ -158,8 +175,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             onlineStateMap.put("time", saveCurrentTime);
             onlineStateMap.put("date", saveCurrentDate);
             onlineStateMap.put("state", state);
-
-        currentUserID = mAuth.getCurrentUser().getUid();
 
         mRef.child("Users").child(currentUserID).child("user_state")
                 .updateChildren(onlineStateMap);

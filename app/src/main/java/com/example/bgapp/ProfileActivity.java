@@ -274,9 +274,8 @@ public class ProfileActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 HashMap<String, String> chatNotificationMap = new HashMap<>();
-                                                chatNotificationMap.put("from", currentUserID);
-                                                chatNotificationMap.put("type", "friend_request");
-
+                                                    chatNotificationMap.put("from", currentUserID);
+                                                    chatNotificationMap.put("type", "friend request");
                                                 notificationRef.child(receiverUserID).push()
                                                         .setValue(chatNotificationMap)
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -57,7 +57,7 @@ public class StartActivity extends AppCompatActivity {
     private String currentUserName;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference mRef;
+    private DatabaseReference mRef, notificationRef;
     private FirebaseUser user;
 
     @Override
@@ -70,6 +70,7 @@ public class StartActivity extends AppCompatActivity {
         currentUserName = user.getDisplayName();
 
         mRef = FirebaseDatabase.getInstance().getReference();
+        notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -106,11 +107,29 @@ public class StartActivity extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.buttonPlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRef.child("Users").child(currentUserID).child("image").equals(currentUserID)) {
+                    Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
+                } else {
+                    moveToPlay();
+                }
+            }
+        });
     }
 
     private void moveToMain() {
         finish();
         Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void moveToPlay() {
+        finish();
+        Intent intent = new Intent(StartActivity.this, TriominoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -164,6 +183,7 @@ public class StartActivity extends AppCompatActivity {
                 });
                 progressBar.setVisibility(View.GONE);
             }
+            notificationRef.child(currentUserID).removeValue();
         }
     }
 

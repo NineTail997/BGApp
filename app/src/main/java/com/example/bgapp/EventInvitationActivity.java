@@ -36,7 +36,7 @@ public class EventInvitationActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
 
-    private DatabaseReference contactsRef, usersRef, eventsRef, eventRequestsRef;
+    private DatabaseReference contactsRef, usersRef, eventsRef, eventRequestsRef, notificationRef;
     private FirebaseAuth mAuth;
 
     private String currentEventName, isUserEventParticipant, currentUserID;
@@ -52,6 +52,7 @@ public class EventInvitationActivity extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         eventsRef = FirebaseDatabase.getInstance().getReference().child("Events");
         eventRequestsRef = FirebaseDatabase.getInstance().getReference().child("Event requests");
+        notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         recyclerView = (RecyclerView) findViewById(R.id.event_invite_recycler_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -100,7 +101,7 @@ public class EventInvitationActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                     if (dataSnapshot.exists() && dataSnapshot.hasChild(profileUserID)) {
-                                                        holder.userStatus.setText(" is already\n " + currentEventName + "\n event participant");
+                                                        holder.userStatus.setText(" is already " + currentEventName + " event participant");
                                                     } else {
                                                         eventRequestsRef.child(profileUserID)
                                                                 .addValueEventListener(new ValueEventListener() {
@@ -210,7 +211,19 @@ public class EventInvitationActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Friend successfully invited", Toast.LENGTH_SHORT).show();
+                            HashMap<String, String> chatNotificationMap = new HashMap<>();
+                                chatNotificationMap.put("from", currentUserID);
+                                chatNotificationMap.put("type", "event invitation");
+                            notificationRef.child(friendUserID).push()
+                                    .setValue(chatNotificationMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), "Friend successfully invited", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                         }
                     }
                 });
