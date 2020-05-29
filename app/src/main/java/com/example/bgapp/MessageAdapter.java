@@ -1,6 +1,7 @@
 package com.example.bgapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -31,8 +32,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageV
     private FirebaseAuth mAuth;
     private DatabaseReference usersRef;
 
-    public MessageAdapter (List<Messages> userMessagesList) {
+    private final Context context;
+
+    public MessageAdapter(List<Messages> userMessagesList, Context context) {
         this.userMessagesList = userMessagesList;
+        this.context = context;
     }
 
     public class messageViewHolder extends RecyclerView.ViewHolder {
@@ -75,7 +79,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageV
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String receiverProfileImage = dataSnapshot.child("image").getValue().toString();
-                Glide.with(holder.itemView.getContext())
+                Glide.with(context)
                         .load(receiverProfileImage)
                         .placeholder(R.drawable.default_image)
                         .into(holder.receiverProfileImage);

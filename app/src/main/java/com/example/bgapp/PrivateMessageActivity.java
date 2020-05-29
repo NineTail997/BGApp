@@ -180,7 +180,7 @@ public class PrivateMessageActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View actionBarView =layoutInflater.inflate(R.layout.custom_message_bar, null);
+        View actionBarView = layoutInflater.inflate(R.layout.custom_message_bar, null);
         actionBar.setCustomView(actionBarView);
 
         userImage = (CircleImageView) findViewById(R.id.custom_profile_image);
@@ -190,7 +190,7 @@ public class PrivateMessageActivity extends AppCompatActivity {
         sendMessageButton = (ImageButton) findViewById(R.id.send_message_button);
         inputMessageText = (EditText) findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList);
+        messageAdapter = new MessageAdapter(messagesList, getApplicationContext());
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list);
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);

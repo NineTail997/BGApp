@@ -487,7 +487,7 @@ public class TriominoActivity extends AppCompatActivity {
                     } else currentPlayerScoreTextView.setText(Long.toString(currentPlayerPoints) + "pts + " + Integer.toString(pointsToAdd) + "pts + 40pts = " + Long.toString(currentPlayerPoints + 40 + pointsToAdd) + "pts");
                 } else {
                     additionalPointsToAdd = 0;
-                    if (pointsToAdd<0) {
+                    if (pointsToAdd < 0) {
                         currentPlayerScoreTextView.setText(Long.toString(currentPlayerPoints) + "pts " + Integer.toString(pointsToAdd) + "pts = " + Long.toString(currentPlayerPoints + pointsToAdd) + "pts");
                     } else currentPlayerScoreTextView.setText(Long.toString(currentPlayerPoints) + "pts + " + Integer.toString(pointsToAdd) + "pts = " + Long.toString(currentPlayerPoints + pointsToAdd) + "pts");
                 }

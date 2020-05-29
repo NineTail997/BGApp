@@ -70,21 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (currentUser == null) {
             startActivity(new Intent(this, SignInActivity.class));
             finish();
-        } else updateUserStatus("online");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        updateUserStatus("offline");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        updateUserStatus("offline");
+        }
     }
 
     @Override
@@ -99,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -112,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.editUser:
+            case R.id.startMenu:
                 Intent editIntent = new Intent(MainActivity.this, StartActivity.class);
                 startActivity(editIntent);
                 break;

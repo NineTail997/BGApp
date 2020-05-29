@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/startMenu"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Start Menu" />
-
-    <item
-        android:id="@+id/createNewEvent"
-        android:icon="@android:drawable/ic_input_add"
-        android:title="Create New Event" />
-
-    <item
-        android:id="@+id/findFriends"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Find Friends" />
 
     <item
         android:id="@+id/menuLogout"

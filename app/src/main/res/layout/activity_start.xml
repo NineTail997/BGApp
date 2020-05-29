@@ -16,10 +16,10 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24dp"
-        android:textStyle="bold"
         android:textAlignment="center"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -67,11 +67,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/rounded_green_button_solid"
-        android:paddingLeft="55dp"
-        android:paddingRight="55dp"
-        android:text="Save"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:text="Save changes"
         android:textAllCaps="false" />
 
     <Button
@@ -79,11 +79,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/rounded_green_button_solid"
-        android:paddingLeft="55dp"
-        android:paddingRight="55dp"
-        android:text="Move to app"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/rounded_blue_button_solid"
+        android:paddingLeft="75dp"
+        android:paddingRight="75dp"
+        android:text=" Events &amp; Friends "
         android:textAllCaps="false" />
 
     <Button
@@ -93,9 +93,10 @@
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
         android:background="@drawable/rounded_green_button_solid"
-        android:paddingLeft="55dp"
-        android:paddingRight="55dp"
-        android:text="  Play game "
+        android:paddingLeft="85dp"
+        android:paddingRight="85dp"
+        android:text="Games helpers"
+
         android:textAllCaps="false" />
 
 </LinearLayout>

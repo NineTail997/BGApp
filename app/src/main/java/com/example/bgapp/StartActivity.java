@@ -129,7 +129,7 @@ public class StartActivity extends AppCompatActivity {
 
     private void moveToPlay() {
         finish();
-        Intent intent = new Intent(StartActivity.this, TriominoActivity.class);
+        Intent intent = new Intent(StartActivity.this, GameSupportChooserActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
