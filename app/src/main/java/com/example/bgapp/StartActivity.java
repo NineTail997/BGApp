@@ -68,6 +68,7 @@ public class StartActivity extends AppCompatActivity {
         currentUserID = mAuth.getCurrentUser().getUid();
         user = mAuth.getCurrentUser();
         currentUserName = user.getDisplayName();
+        profileImageUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
 
         mRef = FirebaseDatabase.getInstance().getReference();
         notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
@@ -100,22 +101,63 @@ public class StartActivity extends AppCompatActivity {
         findViewById(R.id.buttonMove).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mRef.child("Users").child(currentUserID).child("image").equals(currentUserID)) {
-                    Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
-                } else {
-                    moveToMain();
-                }
+                mRef.child("Users").child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("name")) {
+                            moveToMain();
+                        } else {
+                            Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
         findViewById(R.id.buttonPlay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mRef.child("Users").child(currentUserID).child("image").equals(currentUserID)) {
-                    Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
-                } else {
-                    moveToPlay();
-                }
+                mRef.child("Users").child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("name")) {
+                            moveToPlay();
+                        } else {
+                            Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        findViewById(R.id.buttonCollection).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRef.child("Users").child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild("name")) {
+                            moveToCollection();
+                        } else {
+                            Toast.makeText(StartActivity.this, "Provide user information first", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }
@@ -130,6 +172,13 @@ public class StartActivity extends AppCompatActivity {
     private void moveToPlay() {
         finish();
         Intent intent = new Intent(StartActivity.this, GameSupportChooserActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void moveToCollection() {
+        finish();
+        Intent intent = new Intent(StartActivity.this, CollectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -150,39 +199,49 @@ public class StartActivity extends AppCompatActivity {
 
     private void loadUserInformation() {
         if (user != null) {
-            if (currentUserName == null) editText.setVisibility(View.VISIBLE);
-            if (mRef.child("Users").child(currentUserID).equals(currentUserID)) {
-                textView.setText("Tap on camera to choose profile picture");
-            } else {
-                progressBar.setVisibility(View.VISIBLE);
-                mRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name") && (dataSnapshot.hasChild("image"))))
-                        {
-                            String retrieveUserName = dataSnapshot.child("name").getValue().toString();
-                            String retrievesStatus = dataSnapshot.child("status").getValue().toString();
-                            String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
+            mRef.child("Users").child(currentUserID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.hasChild("image") && dataSnapshot.hasChild("name")) {
+                        progressBar.setVisibility(View.VISIBLE);
+                        mRef.child("Users").child(currentUserID).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name") && (dataSnapshot.hasChild("image"))))
+                                {
+                                    String retrieveUserName = dataSnapshot.child("name").getValue().toString();
+                                    String retrievesStatus = dataSnapshot.child("status").getValue().toString();
+                                    String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
 
-                            textView.setText("\nWelcome " + retrieveUserName);
-                            editText.setVisibility(View.GONE);
-                            editText.setText(retrieveUserName);
-                            editStatus.setText(retrievesStatus);
-                            if (retrieveProfileImage != null) {
-                                Glide.with(getApplicationContext())
-                                        .load(retrieveProfileImage)
-                                        .placeholder(R.drawable.default_image)
-                                        .into(imageView);
+                                    textView.setText("\nWelcome " + retrieveUserName);
+                                    editText.setVisibility(View.GONE);
+                                    editText.setText(retrieveUserName);
+                                    editStatus.setText(retrievesStatus);
+                                    if (retrieveProfileImage != null) {
+                                        Glide.with(getApplicationContext())
+                                                .load(retrieveProfileImage)
+                                                .placeholder(R.drawable.default_image)
+                                                .into(imageView);
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                            }
+                        });
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        editText.setVisibility(View.VISIBLE);
+                        textView.setText("Tap on camera to choose profile picture");
                     }
-                });
-                progressBar.setVisibility(View.GONE);
-            }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
             notificationRef.child(currentUserID).removeValue();
         }
     }
@@ -191,7 +250,6 @@ public class StartActivity extends AppCompatActivity {
 
         String displayName = editText.getText().toString();
         String displayStatus = editStatus.getText().toString();
-        profileImageUrl = user.getPhotoUrl().toString();
 
         if (displayName.isEmpty()) {
             editText.setError("Name required");
@@ -221,7 +279,7 @@ public class StartActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Toast.makeText(StartActivity.this, "User information added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(StartActivity.this, "Profile updated", Toast.LENGTH_SHORT).show();
                     } else {
                         String message = task.getException().toString();
                         Toast.makeText(StartActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
@@ -233,9 +291,7 @@ public class StartActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(StartActivity.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                            } else {
+                            if (!task.isSuccessful()) {
                                 String message = task.getException().toString();
                                 Toast.makeText(StartActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
                             }

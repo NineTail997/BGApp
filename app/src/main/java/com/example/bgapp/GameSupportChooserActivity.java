@@ -104,6 +104,16 @@ public class GameSupportChooserActivity extends AppCompatActivity {
                 finish();
                 FirebaseAuth.getInstance().signOut();
                 break;
+
+            case android.R.id.home:
+                Intent intent = new Intent(GameSupportChooserActivity.this, StartActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
         return true;
     }

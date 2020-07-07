@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:hint="Enter Display Name" />
 
     <EditText
@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/rounded_blue_button_solid"
         android:paddingLeft="75dp"
         android:paddingRight="75dp"
@@ -87,16 +87,27 @@
         android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/buttonPlay"
+    android:id="@+id/buttonPlay"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="4dp"
+    android:background="@drawable/rounded_green_button_solid"
+    android:paddingLeft="85dp"
+    android:paddingRight="85dp"
+    android:text="Games helpers"
+    android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/buttonCollection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
-        android:background="@drawable/rounded_green_button_solid"
+        android:background="@drawable/rounded_light_red_button_solid"
         android:paddingLeft="85dp"
         android:paddingRight="85dp"
-        android:text="Games helpers"
-
+        android:text="Your collection"
         android:textAllCaps="false" />
 
 </LinearLayout>

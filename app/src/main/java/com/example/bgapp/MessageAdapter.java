@@ -150,7 +150,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageV
                                         "Delete message for me",
                                         "Cancel"
                                 };
-                        Toast.makeText(holder.itemView.getContext(), userMessagesList.get(position).getTo(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(holder.itemView.getContext(), userMessagesList.get(position).getTo(), Toast.LENGTH_SHORT).show();
                         AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
                         builder.setTitle("Delete message?");
 

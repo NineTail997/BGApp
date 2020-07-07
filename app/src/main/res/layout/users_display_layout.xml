@@ -29,26 +29,18 @@
 
                 <TextView
                     android:id="@+id/user_profile_name"
-                    android:layout_width="200dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="user name"
                     android:textAlignment="textStart"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
 
-                <ImageView
-                    android:id="@+id/online_status"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/online"
-                    android:visibility="invisible"/>
-
             </LinearLayout>
 
             <TextView
                 android:id="@+id/user_status"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="status"
                 android:textAlignment="textStart"

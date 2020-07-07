@@ -78,6 +78,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     eventTime.setVisibility(View.GONE);
                     editEventTime.setVisibility(View.GONE);
                     saveEvent.setVisibility(View.GONE);
+                    availableSlots.setVisibility(View.GONE);
 
                     editEventDate.setText(" Set event date ");
                 } else {
@@ -100,6 +101,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     eventTime.setVisibility(View.VISIBLE);
                     editEventTime.setVisibility(View.VISIBLE);
                     saveEvent.setVisibility(View.VISIBLE);
+                    availableSlots.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -117,6 +119,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     eventDate.setVisibility(View.GONE);
                     editEventDate.setVisibility(View.GONE);
                     saveEvent.setVisibility(View.GONE);
+                    availableSlots.setVisibility(View.GONE);
 
                     editEventTime.setText(" Set event time ");
                 } else {
@@ -139,6 +142,7 @@ public class CreateEventActivity extends AppCompatActivity {
                     eventDate.setVisibility(View.VISIBLE);
                     editEventDate.setVisibility(View.VISIBLE);
                     saveEvent.setVisibility(View.VISIBLE);
+                    availableSlots.setVisibility(View.VISIBLE);
                 }
             }
         });

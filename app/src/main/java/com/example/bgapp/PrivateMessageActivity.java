@@ -144,17 +144,17 @@ public class PrivateMessageActivity extends AppCompatActivity {
             String messagePushID = userMessageKeyRef.getKey();
 
             Map messageTextBody = new HashMap();
-            messageTextBody.put("message", messageText);
-            messageTextBody.put("messageID", messagePushID);
-            messageTextBody.put("type", "text");
-            messageTextBody.put("from", currentUserID);
-            messageTextBody.put("to", messageReceiverID);
-            messageTextBody.put("time", saveCurrentTime);
-            messageTextBody.put("date", saveCurrentDate);
+                messageTextBody.put("message", messageText);
+                messageTextBody.put("messageID", messagePushID);
+                messageTextBody.put("type", "text");
+                messageTextBody.put("from", currentUserID);
+                messageTextBody.put("to", messageReceiverID);
+                messageTextBody.put("time", saveCurrentTime);
+                messageTextBody.put("date", saveCurrentDate);
 
             Map messageBodyDetails = new HashMap();
-            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
 
             mRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                 @Override

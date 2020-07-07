@@ -5,9 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,11 +20,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    private ListView listView;
+    private ArrayAdapter<String> arrayAdapter;
+    private ArrayList<String> list_of_games = new ArrayList<>();
 
     private String receiverUserID, currentUserID, currentState;
 
@@ -31,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView userProfileName, userProfileStatus;
     private Button sendMessageButton, declineMessageRequestButton;
 
-    private DatabaseReference userRef, chatRequestRef, contactsRef, notificationRef;
+    private DatabaseReference userRef, chatRequestRef, contactsRef, notificationRef, collectionRef;
     private FirebaseAuth mAuth;
 
     @Override
@@ -46,6 +55,7 @@ public class ProfileActivity extends AppCompatActivity {
         notificationRef = FirebaseDatabase.getInstance().getReference().child("Notifications");
 
         receiverUserID = getIntent().getExtras().get("visit_user_id").toString();
+        collectionRef = FirebaseDatabase.getInstance().getReference().child("Collections").child(receiverUserID);
         currentUserID = mAuth.getCurrentUser().getUid();
 
         userProfileImage = (CircleImageView) findViewById(R.id.visit_profile_image);
@@ -54,6 +64,12 @@ public class ProfileActivity extends AppCompatActivity {
         sendMessageButton = (Button) findViewById(R.id.buttonMessage);
         declineMessageRequestButton = (Button) findViewById(R.id.declineRequest);
         currentState = "new";
+
+        listView = (ListView) findViewById(R.id.user_collection_list);
+        arrayAdapter = new ArrayAdapter<String>(ProfileActivity.this, android.R.layout.simple_list_item_1, list_of_games);
+        listView.setAdapter(arrayAdapter);
+
+        retrieveAndDisplayCollection();
         
         retrieveUserInformation();
     }
@@ -67,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String userName = dataSnapshot.child("name").getValue().toString();
                     String userStatus = dataSnapshot.child("status").getValue().toString();
 
-                    Glide.with(ProfileActivity.this)
+                    Glide.with(getApplicationContext())
                             .load(userImage)
                             .placeholder(R.drawable.default_image)
                             .into(userProfileImage);
@@ -294,5 +310,37 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void retrieveAndDisplayCollection() {
+        collectionRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Set<String> set = new HashSet<>();
+                String currentCollectionItem;
+
+                String emoji = getEmojiByUnicode(0x1F3B2);
+
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+
+                while (iterator.hasNext()) {
+                    currentCollectionItem = ((DataSnapshot)iterator.next()).getKey();
+                    set.add(emoji + " " + currentCollectionItem);
+                }
+
+                list_of_games.clear();
+                list_of_games.addAll(set);
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
     }
 }

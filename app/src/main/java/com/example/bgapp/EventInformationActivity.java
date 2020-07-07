@@ -150,7 +150,7 @@ public class EventInformationActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                }
+                } else enterEventChatRoom();
             }
         });
 
