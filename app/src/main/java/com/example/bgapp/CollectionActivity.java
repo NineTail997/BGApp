@@ -141,7 +141,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     private void removeBoardGameToCollection(final String currentCollectionItem) {
         AlertDialog.Builder builder = new AlertDialog.Builder(CollectionActivity.this, R.style.AlertDialog);
-        builder.setTitle("Do you want to remove " + currentCollectionItem + " from your collection?");
+        builder.setTitle("Do you want to remove " + currentCollectionItem + " from collection?");
 
         builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
             @Override
